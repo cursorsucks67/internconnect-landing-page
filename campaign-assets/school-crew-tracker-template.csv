@@ -1,0 +1,4 @@
+school,normalized_school,total_signup_count,verified_intern_count,crew_status,captain,clubs_contacted,last_prompt_sent,next_prompt,notes
+NYU,NYU,5,5,unlocked,,,,"Feature NYU in the next Pulse.",
+Columbia,Columbia,4,4,close,,,,"Invite one more Columbia intern to unlock the school crew.",
+Baruch,Baruch,3,3,forming,,,,"Find two more Baruch interns.",

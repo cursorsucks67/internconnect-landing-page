@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Internconnect">
+  <circle cx="90" cy="90" r="90" fill="#1e2935"/>
+  <text
+    x="90"
+    y="110"
+    fill="#f8f4eb"
+    font-family="Trebuchet MS, Avenir Next, Arial, sans-serif"
+    font-size="68"
+    font-weight="800"
+    letter-spacing="0"
+    text-anchor="middle"
+  >ic</text>
+</svg>

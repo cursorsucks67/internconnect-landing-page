@@ -1,0 +1,4 @@
+type,name,school_or_community,url_or_handle,contact_name,contact_channel,status,notes
+club,Finance Society,Example University,https://example.edu,Club President,LinkedIn,prospect,Replace with real target
+creator,NYC intern creator,TikTok,https://www.tiktok.com/@example,Creator,DM,prospect,Student creator with intern content
+forum,Wall Street Oasis,Finance community,https://www.wallstreetoasis.com,,Forum post,prospect,Use resource-style post only

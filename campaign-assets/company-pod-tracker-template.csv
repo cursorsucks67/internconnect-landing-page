@@ -1,0 +1,4 @@
+company,normalized_company,total_signup_count,verified_intern_count,pod_status,captain,top_sources,last_prompt_sent,next_prompt,notes
+JPMorgan,JPMorgan,4,4,close,,direct,,Invite one more JPMorgan intern to unlock the pod.,
+Deloitte,Deloitte,4,4,close,,direct,,Invite one more Deloitte intern to unlock the pod.,
+Goldman Sachs,Goldman Sachs,3,3,forming,,direct,,Find two more Goldman interns.,
