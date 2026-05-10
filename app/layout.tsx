@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "../styles.css";
 
 export const metadata: Metadata = {
-  title: "Internconnect",
+  title: "Internconnected",
   description:
     "Join Internconnected, the verified 2026 Manhattan intern map for finding other interns by company, school, role, pods, and city quests before summer starts.",
   icons: {
