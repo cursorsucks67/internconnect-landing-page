@@ -14,7 +14,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type FormEvent,
 } from "react";
 import {
@@ -713,38 +712,12 @@ export default function LandingPage() {
             <article className="signal-card faction-card">
               <span className="card-kicker">Company Poker</span>
               <h3>Ante up and outplay the other intern desks.</h3>
-              <div className="faction-arena" aria-hidden="true">
-                <div className="competition-table">
-                  <div className="table-center">
-                    <span>Table leader</span>
-                    <strong>JPM owns the pot</strong>
-                  </div>
-                  <div className="chip-stack stack-jpm">
-                    <i />
-                    <i />
-                    <i />
-                    <b>JPM</b>
-                    <small>$3.1K</small>
-                  </div>
-                  <div className="chip-stack stack-dlt">
-                    <i />
-                    <i />
-                    <b>DLT</b>
-                    <small>$2.7K</small>
-                  </div>
-                  <div className="chip-stack stack-gs">
-                    <i />
-                    <i />
-                    <b>GS</b>
-                    <small>$2.2K</small>
-                  </div>
-                  <div className="chip-stack stack-blk">
-                    <i />
-                    <b>BLK</b>
-                    <small>$1.9K</small>
-                  </div>
-                </div>
-              </div>
+              <figure className="feature-art-frame">
+                <img
+                  src="/company-poker.png?v=5"
+                  alt="Illustrated company poker table with readable company chip stacks"
+                />
+              </figure>
               <p>
                 Join your company table, stack chips with other interns, and win
                 the week.
@@ -754,46 +727,12 @@ export default function LandingPage() {
             <article className="signal-card leaderboard-card">
               <span className="card-kicker">Crew Leaderboard</span>
               <h3>Work with fellow interns and climb to the top.</h3>
-              <div className="faction-board">
-                <div>
-                  <span>JPMorgan</span>
-                  <i style={{ "--w": "86%" } as CSSProperties} />
-                  <b>86</b>
-                </div>
-                <div>
-                  <span>Deloitte</span>
-                  <i style={{ "--w": "74%" } as CSSProperties} />
-                  <b>74</b>
-                </div>
-                <div>
-                  <span>Goldman</span>
-                  <i style={{ "--w": "62%" } as CSSProperties} />
-                  <b>62</b>
-                </div>
-                <div>
-                  <span>BlackRock</span>
-                  <i style={{ "--w": "55%" } as CSSProperties} />
-                  <b>55</b>
-                </div>
-              </div>
-              <div className="metric-grid">
-                <div>
-                  <span>Hangouts</span>
-                  <strong>42</strong>
-                </div>
-                <div>
-                  <span>Coffee chats</span>
-                  <strong>118</strong>
-                </div>
-                <div>
-                  <span>Lunch crews</span>
-                  <strong>27</strong>
-                </div>
-                <div>
-                  <span>Invites sent</span>
-                  <strong>{livePulse.interns}</strong>
-                </div>
-              </div>
+              <figure className="feature-art-frame">
+                <img
+                  src="/crew-leaderboard.png?v=3"
+                  alt="Illustrated crew leaderboard dashboard with company rankings"
+                />
+              </figure>
               <p>
                 Rally your pod through hangouts, coffee chats, and small plans
                 that move your crew up the board.
@@ -803,23 +742,12 @@ export default function LandingPage() {
             <article className="signal-card quest-card">
               <span className="card-kicker">Quest Sparks</span>
               <h3>Find plans without awkward group chats.</h3>
-              <div className="quest-stack">
-                <div>
-                  <span>Tonight</span>
-                  <strong>Cross-company coffee walk</strong>
-                  <small>Midtown · 18 interested</small>
-                </div>
-                <div>
-                  <span>Saturday</span>
-                  <strong>Lunch roulette</strong>
-                  <small>Flatiron · 9 matched</small>
-                </div>
-                <div>
-                  <span>Unlock</span>
-                  <strong>Invite 2 interns to open your pod</strong>
-                  <small>Company push</small>
-                </div>
-              </div>
+              <figure className="feature-art-frame quest-art-frame">
+                <img
+                  src="/quest-sparks.png"
+                  alt="Illustrated quest board with coffee, lunch, and invite unlock routes"
+                />
+              </figure>
               <p>
                 Walk into week one with easy invites, small plans, and people to
                 meet before the internship gets busy.

@@ -250,6 +250,11 @@ textarea {
   width: 100%;
 }
 
+.signal-map.static-map-frame .static-map-image {
+  background: color-mix(in oklch, var(--blue) 8%, var(--paper));
+  object-fit: contain;
+}
+
 .signal-map.is-dragging,
 .mini-signal-map.is-dragging {
   cursor: grabbing;
@@ -812,6 +817,28 @@ h1 {
   justify-self: center;
   max-width: 760px;
   width: 100%;
+}
+
+.feature-art-frame {
+  aspect-ratio: 16 / 9;
+  background: color-mix(in oklch, var(--paper) 94%, var(--blue));
+  border: 1px solid color-mix(in oklch, var(--paper) 28%, transparent);
+  border-radius: var(--radius);
+  box-shadow: 0 1rem 1.4rem color-mix(in oklch, black 18%, transparent);
+  margin: 0;
+  overflow: hidden;
+}
+
+.feature-art-frame img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.quest-art-frame {
+  border-color: color-mix(in oklch, var(--ink) 18%, transparent);
+  box-shadow: 5px 5px 0 var(--ink);
 }
 
 .mini-signal-map {
