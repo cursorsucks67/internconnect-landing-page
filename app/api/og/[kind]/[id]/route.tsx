@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import {
+  getSiteUrl,
   getSharePreview,
   normalizeSharePreviewRouteKind,
   truncatePreviewText,
@@ -22,6 +23,7 @@ export async function GET(
   const description = truncatePreviewText(preview?.description ?? "Open Spark to see the details.", 150);
   const subtitle = preview?.subtitle ?? "Spark";
   const eyebrow = preview?.kind === "post" ? "POST" : "SPARK";
+  const logoUrl = `${getSiteUrl()}/spark-logo.jpg`;
 
   return new ImageResponse(
     (
@@ -40,22 +42,18 @@ export async function GET(
         }}
       >
         <div style={{ alignItems: "center", display: "flex", gap: 22 }}>
-          <div
+          <img
+            alt="Spark"
+            height="88"
+            src={logoUrl}
             style={{
-              alignItems: "center",
-              background: "#12302a",
-              borderRadius: 999,
-              color: "#ffffff",
-              display: "flex",
-              fontSize: 44,
-              fontWeight: 800,
+              borderRadius: 22,
               height: 88,
-              justifyContent: "center",
+              objectFit: "cover",
               width: 88,
             }}
-          >
-            S
-          </div>
+            width="88"
+          />
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ color: "#2f9a6c", fontSize: 30, fontWeight: 800 }}>{eyebrow}</div>
             <div style={{ color: "#60746d", fontSize: 30, fontWeight: 700 }}>{subtitle}</div>

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, test } from "bun:test";
 import {
   buildPostPreviewFromRow,
@@ -125,5 +126,13 @@ describe("share preview metadata", () => {
       process.env.SUPABASE_SERVICE_ROLE_KEY = originalServiceRoleKey;
       globalThis.fetch = originalFetch;
     }
+  });
+
+  test("uses the uploaded Spark logo asset for link preview branding", () => {
+    const ogRouteSource = readFileSync("app/api/og/[kind]/[id]/route.tsx", "utf8");
+    const layoutSource = readFileSync("app/layout.tsx", "utf8");
+
+    expect(ogRouteSource).toContain("/spark-logo.jpg");
+    expect(layoutSource).toContain("/spark-logo.jpg");
   });
 });
