@@ -28,6 +28,70 @@
   font-family: "Avenir Next", "Segoe UI", sans-serif;
 }
 
+.deep-link-page {
+  align-items: center;
+  background: #f8f4e8;
+  color: #071422;
+  display: flex;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.deep-link-shell {
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+.deep-link-eyebrow {
+  color: #13795b;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.deep-link-shell h1 {
+  font-size: 36px;
+  line-height: 1.05;
+  margin: 0 0 16px;
+}
+
+.deep-link-shell p {
+  color: #425466;
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.deep-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary-link,
+.secondary-link {
+  align-items: center;
+  border-radius: 6px;
+  display: inline-flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  text-decoration: none;
+}
+
+.primary-link {
+  background: #13795b;
+  color: #ffffff;
+}
+
+.secondary-link {
+  color: #13795b;
+}
+
 * {
   box-sizing: border-box;
 }
