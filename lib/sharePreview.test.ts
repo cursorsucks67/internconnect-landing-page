@@ -80,14 +80,16 @@ describe("share preview metadata", () => {
     expect(preview.description).not.toContain("Company secret");
   });
 
-  test("fetches preview rows from Supabase without exposing client code", async () => {
+  test("fetches preview rows with the current Supabase secret key format", async () => {
     const originalUrl = process.env.SUPABASE_URL;
-    const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const originalSecretKey = process.env.SUPABASE_SECRET_KEY;
+    const originalServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const originalFetch = globalThis.fetch;
     const seenRequests: Array<{ headers: Headers; url: URL }> = [];
 
     process.env.SUPABASE_URL = "https://project.supabase.co";
-    process.env.SUPABASE_SERVICE_ROLE_KEY = "server-key";
+    process.env.SUPABASE_SECRET_KEY = "sb_secret_preview";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "legacy-service-role";
     globalThis.fetch = async (input, init) => {
       seenRequests.push({
         headers: new Headers(init?.headers),
@@ -115,10 +117,12 @@ describe("share preview metadata", () => {
       expect(seenRequests[0].url.origin).toBe("https://project.supabase.co");
       expect(seenRequests[0].url.pathname).toBe("/rest/v1/sparks");
       expect(seenRequests[0].url.searchParams.get("id")).toBe("eq.spark with space");
-      expect(seenRequests[0].headers.get("Authorization")).toBe("Bearer server-key");
+      expect(seenRequests[0].headers.get("apikey")).toBe("sb_secret_preview");
+      expect(seenRequests[0].headers.has("Authorization")).toBe(false);
     } finally {
       process.env.SUPABASE_URL = originalUrl;
-      process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
+      process.env.SUPABASE_SECRET_KEY = originalSecretKey;
+      process.env.SUPABASE_SERVICE_ROLE_KEY = originalServiceRoleKey;
       globalThis.fetch = originalFetch;
     }
   });

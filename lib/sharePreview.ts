@@ -18,6 +18,11 @@ type PostPreviewRow = {
   title: string | null;
 };
 
+type SupabaseApiKey = {
+  sendBearerAuthorization: boolean;
+  value: string;
+};
+
 export type SharePreview = {
   description: string;
   id: string;
@@ -54,16 +59,64 @@ function getSupabaseUrl() {
   )?.replace(/\/+$/, "");
 }
 
-function getSupabaseKey() {
-  return (
-    cleanEnvValue(process.env.SUPABASE_SERVICE_ROLE_KEY) ??
+function getFirstJsonDictionaryValue(value: string | undefined) {
+  const cleanValue = cleanEnvValue(value);
+
+  if (!cleanValue) {
+    return undefined;
+  }
+
+  try {
+    const parsed = JSON.parse(cleanValue) as Record<string, unknown>;
+    const defaultValue = typeof parsed.default === "string" ? cleanEnvValue(parsed.default) : undefined;
+
+    if (defaultValue) {
+      return defaultValue;
+    }
+
+    for (const entry of Object.values(parsed)) {
+      if (typeof entry === "string") {
+        const cleanEntry = cleanEnvValue(entry);
+        if (cleanEntry) {
+          return cleanEntry;
+        }
+      }
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+}
+
+function getSupabaseApiKey(): SupabaseApiKey | null {
+  const currentKey =
     cleanEnvValue(process.env.SUPABASE_SECRET_KEY) ??
-    cleanEnvValue(process.env.SUPABASE_ANON_KEY) ??
+    getFirstJsonDictionaryValue(process.env.SUPABASE_SECRET_KEYS) ??
+    cleanEnvValue(process.env.SUPABASE_PUBLISHABLE_KEY) ??
+    getFirstJsonDictionaryValue(process.env.SUPABASE_PUBLISHABLE_KEYS) ??
     cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) ??
+    cleanEnvValue(process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+
+  if (currentKey) {
+    return {
+      sendBearerAuthorization: false,
+      value: currentKey,
+    };
+  }
+
+  const legacyKey =
+    cleanEnvValue(process.env.SUPABASE_SERVICE_ROLE_KEY) ??
+    cleanEnvValue(process.env.SUPABASE_ANON_KEY) ??
     cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ??
-    cleanEnvValue(process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY) ??
-    cleanEnvValue(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY)
-  );
+    cleanEnvValue(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+
+  return legacyKey
+    ? {
+        sendBearerAuthorization: true,
+        value: legacyKey,
+      }
+    : null;
 }
 
 export function truncatePreviewText(value: string, maxLength: number) {
@@ -180,9 +233,9 @@ export function buildPostPreviewFromRow(id: string, row: PostPreviewRow | null |
 
 async function fetchSupabaseRow<T>(table: string, select: string, id: string): Promise<T | null> {
   const supabaseUrl = getSupabaseUrl();
-  const supabaseKey = getSupabaseKey();
+  const supabaseApiKey = getSupabaseApiKey();
 
-  if (!supabaseUrl || !supabaseKey) {
+  if (!supabaseUrl || !supabaseApiKey) {
     return null;
   }
 
@@ -192,11 +245,16 @@ async function fetchSupabaseRow<T>(table: string, select: string, id: string): P
   url.searchParams.set("select", select);
 
   try {
+    const headers = new Headers({
+      apikey: supabaseApiKey.value,
+    });
+
+    if (supabaseApiKey.sendBearerAuthorization) {
+      headers.set("Authorization", `Bearer ${supabaseApiKey.value}`);
+    }
+
     const response = await fetch(url, {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-      },
+      headers,
       next: { revalidate: 300 },
     });
 
