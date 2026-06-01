@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="112" viewBox="0 0 88 112" role="img" aria-label="google marker">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#07142233"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="44" cy="43" r="33" fill="#d6c45d" stroke="#f8f4eb" stroke-width="8"/>
+    <circle cx="44" cy="43" r="37" fill="none" stroke="#071422" stroke-width="2"/>
+    <path d="M44 104 32 68h24L44 104Z" fill="#d6c45d" stroke="#071422" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="44" cy="43" r="9" fill="#071422"/>
+  </g>
+</svg>
