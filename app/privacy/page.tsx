@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <LegalDocumentPage
-      effectiveDate="June 1, 2026"
+      effectiveDate="June 2, 2026"
       title="Spark Privacy Policy"
       sections={[
         {
@@ -18,8 +18,7 @@ export default function PrivacyPage() {
             "Account information: email address, school email, name, username, profile photo, school, company, role, graduation year, and profile settings.",
             "Verification and directory information: school verification status, school/company membership, company office selection, company pod visibility, and school crew visibility.",
             "Social content and activity: posts, comments, reactions, Spark/activity details, reports, blocks, RSVPs, interests, referrals, invites, past internship entries, and related timestamps.",
-            "Permission and location-related signals: whether location or contacts access was granted, denied, or skipped; precise device location such as latitude and longitude when you allow location during onboarding or event check-in; approximate map areas; selected office Pulse Zone; and nearby Spark check-in signals. Spark should not expose exact live personal location to other users.",
-            "Contacts data: if you grant contacts permission, Spark reads contact email addresses from your device and sends normalized email addresses to our backend to find people already on Spark. Spark does not display your address book to other users.",
+            "Permission and location-related signals: whether location access was granted, denied, or skipped; precise device location such as latitude and longitude when you allow location during onboarding or event check-in; approximate map areas; selected office Pulse Zone; and nearby Spark check-in signals. Spark does not expose your exact live personal location to other users.",
             "Notifications and device data: Expo push notification tokens, device notification permission status, and delivery-related identifiers needed to send Spark reminders and updates.",
             "Analytics and operations data: analytics events such as invites shared, Sparks created, RSVPs, thread messages, app events, error states, moderation actions, account deletion requests, and legal acceptance timestamps/versions used to operate and improve the service.",
           ],
@@ -27,7 +26,7 @@ export default function PrivacyPage() {
         {
           title: "How We Use Information",
           body: [
-            "We use information to operate account access, verify school and company context, show relevant school/company/community surfaces, power map and Spark discovery, match contacts who are already on Spark, send notifications you allow, support moderation and safety, prevent abuse, process invites and referrals, improve the product, and respond to support or deletion requests.",
+            "We use information to operate account access, verify school and company context, show relevant school/company/community surfaces, power map and Spark discovery, send notifications you allow, support moderation and safety, prevent abuse, process invites and referrals, improve the product, and respond to support or deletion requests.",
           ],
         },
         {
@@ -61,8 +60,8 @@ export default function PrivacyPage() {
           ],
         },
         {
-          title: "Contact",
-          body: ["Support: getsparkapp.support@gmail.com"],
+          title: "Support",
+          body: ["Email support: getsparkapp.support@gmail.com"],
         },
       ]}
     />
