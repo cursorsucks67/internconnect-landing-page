@@ -9,38 +9,17 @@ import {
   Spade,
   Utensils,
 } from "lucide-react";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fallbackLivePulse,
   fallbackPulseEvents,
-  type Lead,
   type LivePulse,
   type PulseEvent,
 } from "../lib/pulse";
 
-const normalize = (value: FormDataEntryValue | null) =>
-  String(value ?? "")
-    .trim()
-    .replace(/\s+/g, " ");
-
-const createUserId = () => crypto.randomUUID().replaceAll("-", "");
-
 type MapPoint = {
   lat: number;
   lng: number;
-};
-
-type ShareState = {
-  company: string;
-  message: string;
-  note: string;
-  mailtoHref: string;
 };
 
 type EventIconName =
@@ -209,29 +188,6 @@ const eventMarkers: MapMarker[] = [
   },
 ];
 
-const getStoredLeads = () => {
-  try {
-    return JSON.parse(
-      localStorage.getItem("internconnected_leads") || "[]",
-    ) as Lead[];
-  } catch {
-    return [];
-  }
-};
-
-const storeLead = (lead: Lead) => {
-  const leads = getStoredLeads();
-  const existingIndex = leads.findIndex((item) => item.email === lead.email);
-
-  if (existingIndex >= 0) {
-    leads[existingIndex] = { ...leads[existingIndex], ...lead };
-  } else {
-    leads.push(lead);
-  }
-
-  localStorage.setItem("internconnected_leads", JSON.stringify(leads));
-};
-
 const tileSize = 256;
 const mapWheelZoomStep = 0.28;
 
@@ -269,6 +225,16 @@ const EventMarkerIcon = ({ icon }: { icon?: EventIconName }) => {
     return <PartyPopper aria-hidden="true" strokeWidth={3} />;
   return null;
 };
+
+const AppStoreDownloadButton = ({ className = "" }: { className?: string }) => (
+  <a
+    aria-label="Download on the App Store"
+    className={`app-store-button ${className}`.trim()}
+    href="/download"
+  >
+    <img alt="" aria-hidden="true" src="/apple-download.svg" />
+  </a>
+);
 
 const InternMap = ({
   variant,
@@ -482,11 +448,6 @@ export default function LandingPage() {
   const [livePulse, setLivePulse] = useState<LivePulse>(fallbackLivePulse);
   const [liveEvents, setLiveEvents] =
     useState<PulseEvent[]>(fallbackPulseEvents);
-  const [source, setSource] = useState("direct");
-  const [referrer, setReferrer] = useState("");
-  const [shareState, setShareState] = useState<ShareState | null>(null);
-  const [copyStatus, setCopyStatus] = useState("Copy invite link");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const refreshPulse = async () => {
     try {
@@ -512,104 +473,22 @@ export default function LandingPage() {
     void refreshPulse();
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setSource(params.get("source") || params.get("utm_source") || "direct");
-    setReferrer(params.get("ref") || "");
-  }, []);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    const data = new FormData(event.currentTarget);
-    const lead: Lead = {
-      name: normalize(data.get("name")),
-      email: normalize(data.get("email")).toLowerCase(),
-      school: normalize(data.get("school")),
-      graduation_year: normalize(data.get("graduation_year")),
-      role: normalize(data.get("role")),
-      company: normalize(data.get("company")),
-      user_id: createUserId(),
-      source: normalize(data.get("source")) || "direct",
-      referrer: normalize(data.get("referrer")),
-      created_at: new Date().toISOString(),
-      company_pod_status: "pending",
-      school_crew_status: "pending",
-      verification_status: "unverified",
-    };
-
-    storeLead(lead);
-    let savedToNotion = false;
-    let userId = lead.user_id;
-
-    try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(lead),
-      });
-
-      if (response.ok) {
-        const result = (await response.json()) as {
-          notionConfigured?: boolean;
-          userId?: string;
-        };
-        savedToNotion = Boolean(result.notionConfigured);
-        userId = result.userId || userId;
-        void refreshPulse();
-      }
-    } catch {
-      // The browser backup keeps the invite loop working during local setup.
-    }
-
-    const inviteUrl = `${window.location.origin}${window.location.pathname}?ref=${encodeURIComponent(
-      userId,
-    )}&source=referral`;
-    const message = `I just joined Internconnected, the 2026 NYC intern map. Add yourself so we can unlock our company and school pods: ${inviteUrl}`;
-    const note = savedToNotion
-      ? `Invite 3 interns from ${lead.company} to unlock your company pod. Your signup is now feeding the live Pulse.`
-      : `Invite 3 interns from ${lead.company} to unlock your company pod.`;
-
-    setShareState({
-      company: lead.company,
-      message,
-      note,
-      mailtoHref: `mailto:?subject=${encodeURIComponent(
-        "Join the NYC intern map",
-      )}&body=${encodeURIComponent(message)}`,
-    });
-    setCopyStatus("Copy invite link");
-    setIsSubmitting(false);
-  };
-
-  const handleCopy = async () => {
-    if (!shareState) return;
-
-    try {
-      await navigator.clipboard.writeText(shareState.message);
-      setCopyStatus("Copied");
-      window.setTimeout(() => setCopyStatus("Copy invite link"), 1800);
-    } catch {
-      setCopyStatus("Select text below");
-    }
-  };
-
   return (
     <>
       <header className="site-nav" aria-label="Primary navigation">
-        <a className="brand" href="#top" aria-label="Internconnected home">
-          <span className="brand-mark" aria-hidden="true">
-            ic
-          </span>
-          <span>Internconnected</span>
+        <a className="brand" href="#top" aria-label="Spark: Find Your Crew home">
+          <img
+            alt=""
+            aria-hidden="true"
+            className="brand-logo"
+            src="/spark-logo.jpg"
+          />
+          <span>Spark: Find Your Crew</span>
         </a>
         <nav aria-label="Page sections">
           <a href="#pulse">City Pulse</a>
           <a href="#pods">Pods</a>
-          <a href="#join">Join</a>
+          <a href="#download">Download</a>
         </nav>
       </header>
 
@@ -636,19 +515,17 @@ export default function LandingPage() {
             <p className="eyebrow">2026 NYC Intern Census</p>
             <h1 id="hero-title">NYC’s intern class is getting connected.</h1>
             <p className="hero-lede">
-              Add yourself to the verified NYC intern signal and watch company
-              pods, school crews, and plans pulse around the city.
+              Download the app for the verified NYC intern signal, then find
+              company pods, school crews, and plans pulsing around the city.
             </p>
             <div className="hero-actions">
-              <a className="button primary" href="#join">
-                Join Internconnected
-              </a>
+              <AppStoreDownloadButton />
               <a className="button secondary" href="#pulse">
                 See the Pulse
               </a>
             </div>
             <p className="concept-note">
-              Early access opens as school and company pods unlock.
+              Built for summer interns finding their people in New York.
             </p>
           </div>
         </section>
@@ -679,7 +556,7 @@ export default function LandingPage() {
 
           <div
             className="signal-grid"
-            aria-label="Internconnected city mechanics"
+            aria-label="Spark: Find Your Crew city mechanics"
           >
             <article className="signal-card pulse-card">
               <div className="pulse-card-header">
@@ -820,128 +697,34 @@ export default function LandingPage() {
         </section>
 
         <section
-          id="join"
+          id="download"
           className="section join-section"
           aria-labelledby="join-title"
         >
           <div className="join-copy">
-            <p className="eyebrow">Join early</p>
-            <h2 id="join-title">Put yourself on the NYC intern map.</h2>
+            <p className="eyebrow">Available now</p>
+            <h2 id="join-title">Bring the NYC intern map with you.</h2>
             <p>
-              Six fields, under 30 seconds. After you join, invite interns from
-              your company or school to help unlock the first pods.
+              Spark: Find Your Crew is live on the App Store. Download it to
+              join your pod, discover nearby Sparks, and meet interns around
+              the city.
             </p>
           </div>
 
-          {shareState ? (
-            <aside id="share-panel" className="share-panel" aria-live="polite">
-              <p className="eyebrow">You are on the list</p>
-              <h3>Help unlock your pod.</h3>
-              <p id="share-message">{shareState.note}</p>
-              <div className="share-actions">
-                <button
-                  className="button secondary"
-                  id="copy-link"
-                  type="button"
-                  onClick={handleCopy}
-                >
-                  {copyStatus}
-                </button>
-                <a
-                  className="button primary"
-                  id="mailto-link"
-                  href={shareState.mailtoHref}
-                >
-                  Email a friend
-                </a>
-              </div>
-              <label className="share-copy-label" htmlFor="share-copy">
-                Invite message
-              </label>
-              <textarea id="share-copy" readOnly value={shareState.message} />
-            </aside>
-          ) : (
-            <form
-              id="signup-form"
-              className="signup-form"
-              aria-label="Join Internconnected signup form"
-              aria-describedby="form-note privacy-note"
-              onSubmit={handleSubmit}
-            >
-              <input type="hidden" id="source" name="source" value={source} />
-              <input
-                type="hidden"
-                id="referrer"
-                name="referrer"
-                value={referrer}
-              />
-              <p className="form-note" id="form-note">
-                All fields are required.
-              </p>
-              <label>
-                Name
-                <input
-                  name="name"
-                  autoComplete="name"
-                  required
-                  placeholder="Jordan Lee"
-                />
-              </label>
-              <label>
-                Email
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="jordan@school.edu"
-                />
-              </label>
-              <label>
-                School
-                <input name="school" required placeholder="NYU" />
-              </label>
-              <label>
-                Graduation year
-                <input
-                  name="graduation_year"
-                  inputMode="numeric"
-                  pattern="[0-9]{4}"
-                  required
-                  placeholder="2027"
-                />
-              </label>
-              <label>
-                Internship role
-                <input
-                  name="role"
-                  required
-                  placeholder="Investment Banking Summer Analyst"
-                />
-              </label>
-              <label>
-                Company
-                <input name="company" required placeholder="JPMorgan" />
-              </label>
-              <button
-                className="button primary form-button"
-                id="submit-button"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Joining..." : "Join Internconnected"}
-              </button>
-              <p className="privacy-note" id="privacy-note">
-                No public profile is created from this form. Your signup helps
-                unlock school and company pods.
-              </p>
-            </form>
-          )}
+          <aside className="download-card" aria-label="Download Spark: Find Your Crew">
+            <p className="eyebrow">iPhone app</p>
+            <h3>Start finding your crew today.</h3>
+            <p>
+              Open the App Store listing, install Spark, and use your invite
+              links to bring friends into your Cards.
+            </p>
+            <AppStoreDownloadButton className="download-card-button" />
+          </aside>
         </section>
       </main>
 
       <footer className="site-footer">
-        <span>Internconnected</span>
+        <span>Spark: Find Your Crew</span>
         <span>Built for the 2026 NYC intern cohort.</span>
       </footer>
     </>

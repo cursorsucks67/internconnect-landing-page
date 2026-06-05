@@ -3,9 +3,9 @@ import { Analytics } from "@vercel/analytics/next";
 import "../styles.css";
 
 export const metadata: Metadata = {
-  title: "Internconnected",
+  title: "Spark: Find Your Crew",
   description:
-    "Join Internconnected, the verified 2026 NYC intern map for finding other interns by company, school, role, pods, and city quests before summer starts.",
+    "Download Spark: Find Your Crew, the NYC intern app for finding people, plans, company pods, school crews, and Quest Sparks around the city.",
   icons: {
     icon: "/spark-logo.jpg",
     shortcut: "/spark-logo.jpg",

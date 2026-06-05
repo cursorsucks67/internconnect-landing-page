@@ -3,26 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Internconnected</title>
+    <title>Spark: Find Your Crew</title>
     <meta
       name="description"
-      content="Join Internconnected, the verified 2026 NYC intern map for finding other interns by company, school, role, pods, and city quests before summer starts."
+      content="Download Spark: Find Your Crew, the NYC intern app for finding people, plans, company pods, school crews, and Quest Sparks around the city."
     > 
     <meta name="theme-color" content="#071422">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.svg">
+    <link rel="icon" href="/spark-logo.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="/spark-logo.jpg">
     <link rel="stylesheet" href="styles.css?v=6">
   </head>
   <body>
     <header class="site-nav" aria-label="Primary navigation">
-      <a class="brand" href="#top" aria-label="Internconnected home">
-        <span class="brand-mark" aria-hidden="true">ic</span>
-        <span>Internconnected</span>
+      <a class="brand" href="#top" aria-label="Spark: Find Your Crew home">
+        <img class="brand-logo" src="/spark-logo.jpg" alt="" aria-hidden="true">
+        <span>Spark: Find Your Crew</span>
       </a>
       <nav aria-label="Page sections">
         <a href="#pulse">City Pulse</a>
         <a href="#pods">Pods</a>
-        <a href="#join">Join</a>
+        <a href="#download">Download</a>
       </nav>
     </header>
 
@@ -41,7 +41,7 @@
                   >
                   <div class="map-tint"></div>
                   <div class="app-topbar">
-                    <strong>Internconnected</strong>
+                    <strong>Spark: Find Your Crew</strong>
                     <span>Pulse 286</span>
                   </div>
                   <div class="neighborhood-tag tag-hudson">Hudson Yards</div>
@@ -107,14 +107,16 @@
           <p class="eyebrow">2026 NYC Intern Census</p>
           <h1 id="hero-title">Manhattan’s intern class is getting connected.</h1>
           <p class="hero-lede">
-            Add yourself to the verified map and see company pods, school crews,
-            neighborhood clusters, and first-week plans form before summer starts.
+            Download the app for the verified NYC intern signal, then find
+            company pods, school crews, and plans pulsing around the city.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#join">Join Internconnected</a>
+            <a class="app-store-button" href="/download" aria-label="Download on the App Store">
+              <img src="/apple-download.svg" alt="" aria-hidden="true">
+            </a>
             <a class="button secondary" href="#pulse">See the concept</a>
           </div>
-          <p class="concept-note">Concept preview. Early access opens as pods unlock.</p>
+          <p class="concept-note">Built for summer interns finding their people in New York.</p>
         </div>
       </section>
 
@@ -128,7 +130,7 @@
           <h2 id="vision-title">Turn your intern class into a living city map.</h2>
           <p>
             Every signup, invite, plan, and company push changes what appears on the map.
-            Internconnected should feel like opening the control room for Manhattan intern summer.
+            Spark: Find Your Crew should feel like opening the control room for Manhattan intern summer.
           </p>
         </div>
 
@@ -250,7 +252,7 @@
           <h2 id="plans-title">The app is not live yet. The intern class is.</h2>
           <p>
             Early members help decide which company pods, school crews, and first-week plans
-            Internconnected opens first.
+            Spark: Find Your Crew opens first.
           </p>
         </div>
         <div class="plan-stack" aria-label="Concept preview of first-week plans">
@@ -272,72 +274,34 @@
         </div>
       </section>
 
-      <section id="join" class="section join-section" aria-labelledby="join-title">
+      <section id="download" class="section join-section" aria-labelledby="join-title">
         <div class="join-copy">
-          <p class="eyebrow">Join early</p>
-          <h2 id="join-title">Put yourself on the Manhattan intern map.</h2>
+          <p class="eyebrow">Available now</p>
+          <h2 id="join-title">Bring the NYC intern map with you.</h2>
           <p>
-            Six fields, under 30 seconds. After you join, invite interns from your company
-            or school to help unlock the first pods.
+            Spark: Find Your Crew is live on the App Store. Download it to join your pod,
+            discover nearby Sparks, and meet interns around the city.
           </p>
         </div>
 
-        <form
-          id="signup-form"
-          class="signup-form"
-          aria-label="Join Internconnected signup form"
-          aria-describedby="form-note privacy-note"
-        >
-          <input type="hidden" id="source" name="source">
-          <input type="hidden" id="referrer" name="referrer">
-          <p class="form-note" id="form-note">All fields are required.</p>
-          <label>
-            Name
-            <input name="name" autocomplete="name" required placeholder="Jordan Lee">
-          </label>
-          <label>
-            Email
-            <input name="email" type="email" autocomplete="email" required placeholder="jordan@school.edu">
-          </label>
-          <label>
-            School
-            <input name="school" required placeholder="NYU">
-          </label>
-          <label>
-            Graduation year
-            <input name="graduation_year" inputmode="numeric" pattern="[0-9]{4}" required placeholder="2027">
-          </label>
-          <label>
-            Internship role
-            <input name="role" required placeholder="Investment Banking Summer Analyst">
-          </label>
-          <label>
-            Company
-            <input name="company" required placeholder="JPMorgan">
-          </label>
-          <button class="button primary form-button" id="submit-button" type="submit">Join Internconnected</button>
-          <p class="privacy-note" id="privacy-note">No public profile is created from this form. The concept previews above are sample visuals.</p>
-        </form>
-
-        <aside id="share-panel" class="share-panel" aria-hidden="true" aria-live="polite" hidden>
-          <p class="eyebrow">You are on the list</p>
-          <h3>Help unlock your pod.</h3>
-          <p id="share-message">Invite 3 interns from your company to unlock your company pod.</p>
-          <div class="share-actions">
-            <button class="button secondary" id="copy-link" type="button">Copy invite link</button>
-            <a class="button primary" id="mailto-link" href="#">Email a friend</a>
-          </div>
-          <label class="share-copy-label" for="share-copy">Invite message</label>
-          <textarea id="share-copy" readonly></textarea>
+        <aside class="download-card" aria-label="Download Spark: Find Your Crew">
+          <p class="eyebrow">iPhone app</p>
+          <h3>Start finding your crew today.</h3>
+          <p>
+            Open the App Store listing, install Spark, and use your invite links to
+            bring friends into your Cards.
+          </p>
+          <a class="app-store-button download-card-button" href="/download" aria-label="Download on the App Store">
+            <img src="/apple-download.svg" alt="" aria-hidden="true">
+          </a>
         </aside>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>Internconnected</span>
-      <span>Concept preview for the 2026 NYC intern cohort.</span>
+      <span>Spark: Find Your Crew</span>
+      <span>Built for the 2026 NYC intern cohort.</span>
     </footer>
 
-    <script src="script.js?v=6"></script>
   </body>
 </html>

@@ -135,11 +135,13 @@ describe("share preview metadata", () => {
     }
   });
 
-  test("uses the uploaded Spark logo asset for link preview branding", () => {
+  test("uses the Spark logo asset for link preview branding", () => {
     const ogRouteSource = readFileSync("app/api/og/[kind]/[id]/route.tsx", "utf8");
     const layoutSource = readFileSync("app/layout.tsx", "utf8");
 
     expect(ogRouteSource).toContain("/spark-logo.jpg");
     expect(layoutSource).toContain("/spark-logo.jpg");
+    expect(ogRouteSource).not.toContain("/icon.png");
+    expect(layoutSource).not.toContain("/icon.png");
   });
 });

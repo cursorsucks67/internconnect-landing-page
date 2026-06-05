@@ -31,8 +31,8 @@ export function DeepLinkFallbackPage({ id, kind }: DeepLinkFallbackPageProps) {
         <p className="deep-link-eyebrow">Spark</p>
         <h1>Open this {label} in Spark</h1>
         <p>
-          If Spark is installed, open the app. If not, download the TestFlight build and come back to this link after
-          setup.
+          If Spark is installed, open the app. If not, download Spark from the App Store and come back to this link
+          after setup.
         </p>
         <div className="deep-link-actions">
           <a className="primary-link" href={nativeUrl}>

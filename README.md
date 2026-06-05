@@ -1,6 +1,6 @@
-# Internconnected Pre-Build Campaign
+# Spark: Find Your Crew Landing Page
 
-This workspace implements the Internconnected pre-build growth system for the summer 2026 NYC intern cohort.
+This workspace implements the Spark: Find Your Crew landing page and public deep-link fallback pages for the summer 2026 NYC intern cohort.
 
 ## What Is Included
 
