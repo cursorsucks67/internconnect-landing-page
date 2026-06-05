@@ -81,18 +81,21 @@ describe("share preview metadata", () => {
     expect(preview.description).not.toContain("Company secret");
   });
 
-  test("fetches preview rows with the current Supabase secret key format", async () => {
+  test("fetches preview rows through the public share-preview RPC", async () => {
     const originalUrl = process.env.SUPABASE_URL;
     const originalSecretKey = process.env.SUPABASE_SECRET_KEY;
+    const originalPublishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
     const originalServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const originalFetch = globalThis.fetch;
-    const seenRequests: Array<{ headers: Headers; url: URL }> = [];
+    const seenRequests: Array<{ body: unknown; headers: Headers; url: URL }> = [];
 
     process.env.SUPABASE_URL = "https://project.supabase.co";
-    process.env.SUPABASE_SECRET_KEY = "sb_secret_preview";
+    process.env.SUPABASE_SECRET_KEY = "";
+    process.env.SUPABASE_PUBLISHABLE_KEY = "sb_publishable_preview";
     process.env.SUPABASE_SERVICE_ROLE_KEY = "legacy-service-role";
     globalThis.fetch = async (input, init) => {
       seenRequests.push({
+        body: JSON.parse(init?.body?.toString() ?? "{}"),
         headers: new Headers(init?.headers),
         url: new URL(input.toString()),
       });
@@ -112,17 +115,21 @@ describe("share preview metadata", () => {
     };
 
     try {
-      const preview = await getSharePreview("spark", "spark with space");
+      const preview = await getSharePreview("spark", "11111111-1111-4111-8111-111111111111");
 
       expect(preview.title).toBe("Coffee nearby");
       expect(seenRequests[0].url.origin).toBe("https://project.supabase.co");
-      expect(seenRequests[0].url.pathname).toBe("/rest/v1/sparks");
-      expect(seenRequests[0].url.searchParams.get("id")).toBe("eq.spark with space");
-      expect(seenRequests[0].headers.get("apikey")).toBe("sb_secret_preview");
-      expect(seenRequests[0].headers.has("Authorization")).toBe(false);
+      expect(seenRequests[0].url.pathname).toBe("/rest/v1/rpc/get_public_share_preview");
+      expect(seenRequests[0].body).toEqual({
+        target_id: "11111111-1111-4111-8111-111111111111",
+        target_kind: "spark",
+      });
+      expect(seenRequests[0].headers.get("apikey")).toBe("sb_publishable_preview");
+      expect(seenRequests[0].headers.get("Authorization")).toBe("Bearer sb_publishable_preview");
     } finally {
       process.env.SUPABASE_URL = originalUrl;
       process.env.SUPABASE_SECRET_KEY = originalSecretKey;
+      process.env.SUPABASE_PUBLISHABLE_KEY = originalPublishableKey;
       process.env.SUPABASE_SERVICE_ROLE_KEY = originalServiceRoleKey;
       globalThis.fetch = originalFetch;
     }

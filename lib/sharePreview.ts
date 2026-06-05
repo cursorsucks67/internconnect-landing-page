@@ -19,9 +19,14 @@ type PostPreviewRow = {
 };
 
 type SupabaseApiKey = {
-  sendBearerAuthorization: boolean;
   value: string;
 };
+
+type SharePreviewRpcRow = SparkPreviewRow &
+  PostPreviewRow & {
+    id: string;
+    kind: SharePreviewKind;
+  };
 
 export type SharePreview = {
   description: string;
@@ -40,7 +45,8 @@ const GENERIC_SPARK_DESCRIPTION = "See the plan and who is joining in the Spark 
 const GENERIC_POST_DESCRIPTION = "Read the post and replies in the Spark app.";
 
 function cleanEnvValue(value: string | undefined) {
-  return value?.trim().replace(/^['"]|['"]$/g, "");
+  const cleanValue = value?.trim().replace(/^['"]|['"]$/g, "");
+  return cleanValue || undefined;
 }
 
 export function getSiteUrl() {
@@ -100,7 +106,6 @@ function getSupabaseApiKey(): SupabaseApiKey | null {
 
   if (currentKey) {
     return {
-      sendBearerAuthorization: false,
       value: currentKey,
     };
   }
@@ -113,7 +118,6 @@ function getSupabaseApiKey(): SupabaseApiKey | null {
 
   return legacyKey
     ? {
-        sendBearerAuthorization: true,
         value: legacyKey,
       }
     : null;
@@ -231,30 +235,34 @@ export function buildPostPreviewFromRow(id: string, row: PostPreviewRow | null |
   };
 }
 
-async function fetchSupabaseRow<T>(table: string, select: string, id: string): Promise<T | null> {
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+async function fetchSharePreviewRpcRow(kind: SharePreviewKind, id: string): Promise<SharePreviewRpcRow | null> {
   const supabaseUrl = getSupabaseUrl();
   const supabaseApiKey = getSupabaseApiKey();
 
-  if (!supabaseUrl || !supabaseApiKey) {
+  if (!supabaseUrl || !supabaseApiKey || !isUuid(id)) {
     return null;
   }
 
-  const url = new URL(`/rest/v1/${table}`, supabaseUrl);
-  url.searchParams.set("id", `eq.${id}`);
-  url.searchParams.set("limit", "1");
-  url.searchParams.set("select", select);
+  const url = new URL("/rest/v1/rpc/get_public_share_preview", supabaseUrl);
 
   try {
     const headers = new Headers({
       apikey: supabaseApiKey.value,
+      Authorization: `Bearer ${supabaseApiKey.value}`,
+      "Content-Type": "application/json",
     });
 
-    if (supabaseApiKey.sendBearerAuthorization) {
-      headers.set("Authorization", `Bearer ${supabaseApiKey.value}`);
-    }
-
     const response = await fetch(url, {
+      body: JSON.stringify({
+        target_id: id,
+        target_kind: kind,
+      }),
       headers,
+      method: "POST",
       next: { revalidate: 300 },
     });
 
@@ -262,7 +270,7 @@ async function fetchSupabaseRow<T>(table: string, select: string, id: string): P
       return null;
     }
 
-    const rows = (await response.json()) as T[];
+    const rows = (await response.json()) as SharePreviewRpcRow[];
     return rows[0] ?? null;
   } catch {
     return null;
@@ -270,16 +278,12 @@ async function fetchSupabaseRow<T>(table: string, select: string, id: string): P
 }
 
 export async function getSharePreview(kind: SharePreviewKind, id: string): Promise<SharePreview> {
+  const row = await fetchSharePreviewRpcRow(kind, id);
+
   if (kind === "spark") {
-    const row = await fetchSupabaseRow<SparkPreviewRow>(
-      "sparks",
-      "title,description,visibility,status,starts_at,exact_location",
-      id,
-    );
     return buildSparkPreviewFromRow(id, row);
   }
 
-  const row = await fetchSupabaseRow<PostPreviewRow>("threads", "title,body,board_scope,status", id);
   return buildPostPreviewFromRow(id, row);
 }
 
