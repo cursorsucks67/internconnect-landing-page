@@ -156,7 +156,9 @@ export function getFallbackSharePreview(kind: SharePreviewKind, id: string): Sha
   return {
     description: isSpark ? GENERIC_SPARK_DESCRIPTION : GENERIC_POST_DESCRIPTION,
     id,
-    imageUrl: getSharePreviewImageUrl(kind, id),
+    // Use the static logo so crawlers (Instagram, etc.) always get a fast, reliable image
+    // instead of the dynamic edge function which may fail on first request.
+    imageUrl: `${getSiteUrl()}/spark-logo.jpg`,
     isGeneric: true,
     kind,
     pageUrl: getSharePreviewPageUrl(kind, id),
